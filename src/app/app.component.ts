@@ -1,42 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { StudentService } from './student.service';
+import { ProfileComponent } from './profile/profile.component';
+import {OrganiserService} from './organiser.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   title = 'app';
-
+  message: object;
   serverData: JSON;
-  employeeData: JSON;
-  employee:JSON;
+  m: string;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private organiser: OrganiserService) {
+    this.organiser.currentMessage.subscribe(message => {this.message = message; console.log(this.message); this.show(); this.check();});
   }
 
   ngOnInit() {
   }
 
-  sayHi() {
-    this.httpClient.get('http://127.0.0.1:5002/').subscribe(data => {
-      this.serverData = data as JSON;
-      console.log(this.serverData);
-    })
+  show() {
+    //console.log(this.student.currentMessage);
+    if(this.message.hasOwnProperty('first_name')) {
+      return true;
+    }
+    else
+      return false;
   }
 
-  getAllEmployees() {
-    this.httpClient.get('http://127.0.0.1:5002/employees').subscribe(data => {
-      this.employeeData = data as JSON;
-      console.log(this.employeeData);
-    })
+  setempty() {
+    this.organiser.changeMessage({});
+    //console.log(this.student.currentMessage);
+    this.show();
   }
-  getEmployee() {
-    this.httpClient.get('http://127.0.0.1:5002/employees/1').subscribe(data => {
-      this.employee = data as JSON;
-      console.log(this.employee);
-    })
+
+  check() {
+    if(Object.keys(this.message).length == 0) {
+      return false;
+    }
+    else
+      return true;
   }
+
+
 }
