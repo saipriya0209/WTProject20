@@ -135,12 +135,48 @@ def allocate_funds():
   already_spent = 0
   for row in rows:
     already_spent += row[2]
-  if(total_amount - already_spent >= amount):
-    query = "INSERT INTO funds(o_id, e_id, amount, reason) VALUES(" + str(o_id) + ", " + str(e_id) + ", " + str(amount) + ", '" + reason + "';"
+  if(total_amount - already_spent >= int(amount)):
+    query = "INSERT INTO funds(e_id, amount, reason) VALUES(" + str(e_id) + ", " + str(amount) + ", '" + reason + "');"
+    c.execute(query)
     conn.commit()
     return jsonify({"message": "successful"})
   else:
     return jsonify({"message": "funds insufficient"})
+
+@app.route('/fund_rem', methods=["POST"])
+def fund_rem():
+  e_id = request.get_json()["e_id"]
+  database = r"pythonsqlite.db"
+  conn = create_connection(database)
+  c = conn.cursor()
+  query = "SELECT * FROM event WHERE e_id = " + str(e_id) + ";"
+  c.execute(query)
+  rows = c.fetchone()
+  funds_given = rows[1]
+  print(funds_given)
+  query = "SELECT * FROM funds WHERE e_id = " + str(e_id) + ";"
+  c.execute(query)
+  rows = c.fetchall()
+  spent = 0
+  for row in rows:
+    spent += row[2]
+  send_back = {"rem_funds": funds_given - spent}
+  return jsonify(send_back)
+
+@app.route('/event_log', methods=["POST"])
+def event_log():
+  e_id = request.get_json()["e_id"]
+  database = r"pythonsqlite.db"
+  conn = create_connection(database)
+  c = conn.cursor()
+  query = "SELECT * FROM funds WHERE e_id = " + str(e_id) + ";"
+  c.execute(query)
+  rows = c.fetchall()
+  if(rows):
+    return jsonify({"data": rows})
+  else:
+    return jsonify({})
+
 
 @app.route('/totalprofit', methods=["POST"])
 def total_profit():
@@ -180,13 +216,51 @@ def event_profit():
 def give_prize():
   r_id = request.get_json()["r_id"]
   prize = request.get_json()["prize"]
+  e_id = request.get_json()["e_id"]
   database = r"pythonsqlite.db"
   conn = create_connection(database)
   c = conn.cursor()
-  query = "UPDATE TABLE registration SET prize = '" + prize + "' WHERE r_id = " + str(r_id) + ";"
+  query = "SELECT * FROM registration WHERE r_id = " + str(r_id) + " AND e_id = " + str(e_id) + ";"
   c.execute(query)
-  conn.commit()
+  rows = c.fetchall()
+  if(len(rows) != 0):
+    query = "UPDATE registration SET prize = '" + prize + "' WHERE r_id = " + str(r_id) + ";"
+    print(query)
+    c.execute(query)
+    conn.commit()
+    return jsonify({"message":"successful"})
+  else:
+    return jsonify({"message":"unsuccessful"})
+
+@app.route('/event_comp', methods=["POST"])
+def event_complete():
+  e_id = request.get_json()["e_id"]
+  database = r"pythonsqlite.db"
+  conn = create_connection(database)
+  c = conn.cursor()
+  query = "SELECT * FROM registration WHERE e_id = " + str(e_id) + ";"
+  c.execute(query)
+  rows = c.fetchall()
+  print(rows)
+  if(len(rows) != 0):
+    for row in rows:
+      if(row[3] == '-'):
+        query = "UPDATE registration SET prize = 'No Prize' WHERE r_id = " + str(row[0]) + ";"
+        c.execute(query)
+        conn.commit()
   return jsonify({})
+
+@app.route('/show_reg', methods=['POST'])
+def show_reg():
+  e_id = request.get_json()["e_id"]
+  database = r"pythonsqlite.db"
+  conn = create_connection(database)
+  c = conn.cursor()
+  query = "SELECT * FROM registration WHERE e_id = " + str(e_id) + ";"
+  c.execute(query)
+  rows = c.fetchall()
+  return jsonify({"data": rows})
+
 
 database = r"pythonsqlite.db"
 # write queries for creating tables here
@@ -195,7 +269,7 @@ create_students_table = """CREATE TABLE IF NOT EXISTS students (
 create_orgainsers_table = """CREATE TABLE IF NOT EXISTS organisers (o_id INTEGER PRIMARY KEY AUTOINCREMENT, first_name text NOT NULL, last_name text NOT NULL, email text NOT NULL UNIQUE, password text NOT NULL, phone_no int(10) NOT NULL); """
 create_hobbies_table = """CREATE TABLE IF NOT EXISTS hobbies (id INTEGER PRIMARY KEY AUTOINCREMENT, student_id INTEGER, hobby text, FOREIGN KEY (student_id) REFERENCES students(s_id)) """
 create_event_table = """ CREATE TABLE IF NOT EXISTS event( e_id INTEGER PRIMARY KEY AUTOINCREMENT, funds INTEGER NOT NULL, e_name VARCHAR(100) NOT NULL, o_id INTEGER NOT NULL, e_type VARCHAR(100) NOT NULL, e_date DATETIME NOT NULL, e_venue VARCHAR(300) NOT NULL, e_fee INTEGER, e_tsize INTEGER, e_maxpar INTEGER, FOREIGN KEY (o_id) REFERENCES organiser(id));"""
-create_registration_table = """CREATE TABLE IF NOT EXISTS registration (r_id INTEGER PRIMARY KEY AUTOINCREMENT,  e_id INTEGER NOT NULL, student_id INTEGER NOT NULL, prize VARCHAR(100) DEFAULT '-', FOREIGN KEY (r_id) REFERENCES student(id), FOREIGN KEY (e_id) REFERENCES event(e_id));"""
+create_registration_table = """CREATE TABLE IF NOT EXISTS registration (r_id INTEGER PRIMARY KEY AUTOINCREMENT,  e_id INTEGER NOT NULL, s_id INTEGER NOT NULL, prize VARCHAR(100) DEFAULT '-', FOREIGN KEY (s_id) REFERENCES student(s_id), FOREIGN KEY (e_id) REFERENCES event(e_id));"""
 create_registrationteam_table = """CREATE TABLE IF NOT EXISTS rteam (id INTEGER PRIMARY KEY AUTOINCREMENT, members VARCHAR(200) NOT NULL, FOREIGN KEY (id) REFERENCES registration(r_id));"""
 create_funds_table = """CREATE TABLE IF NOT EXISTS funds (id INTEGER PRIMARY KEY AUTOINCREMENT, e_id INTEGER, amount INTEGER, reason TEXT, FOREIGN KEY (e_id) REFERENCES event(e_id));"""
 #create_updates_table = """CREATE TABLE IF NOT EXISTS updates (id INTEGER PRIMARY KEY AUTOINCREMENT, o_id INTEGER, r_id INTEGER, FOREIGN KEY (o_id) REFERENCES organisers(id) , FOREIGN KEY (r_id) REFERENCES registration(r_id));"""
