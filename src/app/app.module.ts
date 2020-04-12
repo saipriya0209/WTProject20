@@ -4,6 +4,9 @@ import { HttpClientModule } from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatTableModule} from '@angular/material/table';
+import {MatGridListModule} from '@angular/material/grid-list';
+
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -17,6 +20,10 @@ import { CreateEvent } from './organiser/create_event/create_event.component';
 import { AllEvents } from './organiser/list_event/list_event.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {DialogOverviewExampleDialog} from './organiser/allocate_funds/allocate_funds.component';
+import {ExpenseLog} from './organiser/expense_log/expense_log.component';
+import { PrizeDistb } from './organiser/prize_dist/prize_dist.component';
+import { DisplayRegistrationTable } from './organiser/display_reg/display_reg.component';
+
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -34,7 +41,10 @@ const routes: Routes = [
     ProfileComponent,
     CreateEvent,
     AllEvents,
-    DialogOverviewExampleDialog
+    DialogOverviewExampleDialog,
+    ExpenseLog,
+    PrizeDistb,
+    DisplayRegistrationTable
   ],
   imports: [
     BrowserModule,
@@ -46,6 +56,8 @@ const routes: Routes = [
     BrowserAnimationsModule,
     MatInputModule,
     MatDialogModule,
+    MatTableModule,
+    MatGridListModule,
 
   ],
   providers: [StudentService, OrganiserService],

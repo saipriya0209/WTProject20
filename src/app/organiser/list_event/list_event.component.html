@@ -1,11 +1,41 @@
-<ul>
-  <li *ngFor="let event of this.serverData">
-    <ul>{{ event[2] }}</ul>
-    <ul>Total funds allocated: {{ event[1] }}</ul>
-    <ul>Event type: {{ event[4] }} </ul>
-    <ul>Date: {{ event[5] }}</ul>
-    <ul>Venue: {{ event[6] }}</ul>
-    <ul>Participants per team: {{ event[8] }} </ul>
-    <button (click)="fund(event)">Record Expense</button>
-  </li>
-</ul>
+<div class='row'>
+  <div class='column'>
+    <h1>Upcoming Events</h1>
+    <ul id="outerlist1">
+      <li *ngFor="let event of this.serverDataPresent">
+        <ul>{{ event[2] }}</ul>
+        <ul>Total funds allocated: {{ event[1] }}</ul>
+        <ul>Event type: {{ event[4] }} </ul>
+        <ul>Date: {{ event[5] }}</ul>
+        <ul>Venue: {{ event[6] }}</ul>
+        <ul>Participants per team: {{ event[8] }} </ul>
+        <ul>Funds remaining: {{ event[10] }}</ul>
+        <button (click)="fund(event)">Record Expense</button>
+        <button (click)="expense_log(event)">Expense Log</button>
+        <button (click)="give_prize(event)">Update Prizes</button><br>
+        <button (click)="see_registrations(event)">See All Registrations</button>
+        <button (click)="complete_event(event)">Complete Event</button>
+      </li>
+    </ul>
+  </div>
+  <div class='column'>
+    <h1>Past Events</h1>
+    <ul id="outerlist2">
+    <li *ngFor="let event of this.serverDataPast">
+        <ul>{{ event[2] }}</ul>
+        <ul>Total funds allocated: {{ event[1] }}</ul>
+        <ul>Event type: {{ event[4] }} </ul>
+        <ul>Date: {{ event[5] }}</ul>
+        <ul>Venue: {{ event[6] }}</ul>
+        <ul>Participants per team: {{ event[8] }} </ul>
+        <ul>Funds remaining: {{ event[10] }}</ul>
+        <button (click)="fund(event)">Record Expense</button>
+        <button (click)="expense_log(event)">Expense Log</button>
+        <button (click)="give_prize(event)">Update Prizes</button><br>
+        <button (click)="see_registrations(event)">See All Registrations</button>
+        <button (click)="complete_event(event)">Complete Event</button>
+      </li>
+    </ul>
+  </div>
+</div>
+<router-outlet></router-outlet>

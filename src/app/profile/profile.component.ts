@@ -32,5 +32,9 @@ export class ProfileComponent implements OnInit {
 
   get_events() {
     this.router.navigateByUrl('/allevents');
-    };
+  };
+
+  get_statistics() {
+    this.router.navigateByUrl('/statistics');
+  }
 }
