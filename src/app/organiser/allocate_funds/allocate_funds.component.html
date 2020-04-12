@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <h1 mat-dialog-title>Hi</h1>
 <div mat-dialog-content>
   <p>How much do you want to allocate?</p>
@@ -16,22 +15,3 @@
   <button mat-button (click)="onNoClick()">Close</button>
   <button mat-button (click)="onClick()">Ok</button>
 </div>
-=======
-<h1 mat-dialog-title>Hi</h1>
-<div mat-dialog-content>
-  <p>How much do you want to allocate?</p>
-  <mat-form-field>
-    <mat-label>Reason: </mat-label>
-    <input matInput [(ngModel)]="reason">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Amount: </mat-label>
-    <input matInput [(ngModel)]="amount">
-  </mat-form-field>
-</div>
-<div *ngIf="message1">{{ message1 }}</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Close</button>
-  <button mat-button (click)="onClick()">Ok</button>
-</div>
->>>>>>> f4f60c3593a01b048defffe744f5124189a8317e
