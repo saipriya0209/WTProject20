@@ -7,7 +7,7 @@ import {OrganiserService} from './organiser.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css', '../../node_modules/materialize-css/dist/css/materialize.min.css']
 })
 
 export class AppComponent {

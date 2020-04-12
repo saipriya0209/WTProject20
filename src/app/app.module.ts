@@ -6,7 +6,10 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTableModule} from '@angular/material/table';
 import {MatGridListModule} from '@angular/material/grid-list';
+<<<<<<< HEAD
+=======
 
+>>>>>>> f4f60c3593a01b048defffe744f5124189a8317e
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -23,6 +26,14 @@ import {DialogOverviewExampleDialog} from './organiser/allocate_funds/allocate_f
 import {ExpenseLog} from './organiser/expense_log/expense_log.component';
 import { PrizeDistb } from './organiser/prize_dist/prize_dist.component';
 import { DisplayRegistrationTable } from './organiser/display_reg/display_reg.component';
+<<<<<<< HEAD
+import { OrganiserStatistics } from './organiser/organiser_statistics/organiser_statistics.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioModule } from '@angular/material/radio';
+import {MatButtonModule} from '@angular/material/button';
+
+=======
+>>>>>>> f4f60c3593a01b048defffe744f5124189a8317e
 
 
 const routes: Routes = [
@@ -30,7 +41,8 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'profile', component: ProfileComponent},
   {path: 'newevent', component: CreateEvent },
-  {path: 'allevents', component: AllEvents}
+  {path: 'allevents', component: AllEvents},
+  {path: 'statistics', component: OrganiserStatistics}
 ]
 
 @NgModule({
@@ -44,7 +56,12 @@ const routes: Routes = [
     DialogOverviewExampleDialog,
     ExpenseLog,
     PrizeDistb,
+<<<<<<< HEAD
+    DisplayRegistrationTable,
+    OrganiserStatistics
+=======
     DisplayRegistrationTable
+>>>>>>> f4f60c3593a01b048defffe744f5124189a8317e
   ],
   imports: [
     BrowserModule,
@@ -58,7 +75,14 @@ const routes: Routes = [
     MatDialogModule,
     MatTableModule,
     MatGridListModule,
+<<<<<<< HEAD
+    MatInputModule,
+    MatFormFieldModule,
+    MatRadioModule,
+    MatButtonModule
+=======
 
+>>>>>>> f4f60c3593a01b048defffe744f5124189a8317e
   ],
   providers: [StudentService, OrganiserService],
   bootstrap: [AppComponent]

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .row {
   display: flex;
 }
@@ -8,3 +9,28 @@
   padding: 10px;
   height: 300px; /* Should be removed. Only for demonstration */
 }
+
+h1 {
+  text-align: center;
+}
+
+#card1, #card2 {
+  width: 50%;
+  margin-left: 25%;
+}
+
+.row {
+  align-content: center;
+}
+=======
+.row {
+  display: flex;
+}
+
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+>>>>>>> f4f60c3593a01b048defffe744f5124189a8317e
