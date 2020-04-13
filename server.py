@@ -1,11 +1,12 @@
-from flask import Flask, request
+from flask import Flask, request, send_file, make_response
 from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api
 from json import dumps
+import json
 from flask_jsonpify import jsonify
 import sqlite3
 from sqlite3 import Error
-
+import requests
 
 app = Flask(__name__)
 api = Api(app)
@@ -34,7 +35,6 @@ def check():
   email = request.get_json()["email"]
   password = request.get_json()["password"]
   table_name = request.get_json()["account_type"]
-  print(table_name)
   if(table_name == "organiser"):
     query = "SELECT * FROM organisers WHERE email = '" + email + "' AND password  = '" + password + "';"
   else:
@@ -68,7 +68,6 @@ def new_user():
     d = dict()
     if(len(rows) == 0):
       query = "INSERT INTO students(first_name, last_name, email, password, phone_no) VALUES('" + first_name + "', '" + last_name + "', '" + email + "','" + password + "'," + phone_no + ");"
-      print(query)
       c = conn.cursor()
       c.execute(query)
       d["result"] = "successful"
@@ -97,7 +96,6 @@ def new_event():
     c = conn.cursor()
     #change the value of o_id
     query = " INSERT INTO event(o_id, funds, e_name, o_id, e_type, e_date, e_venue, e_fee, e_tsize, e_maxpar) VALUES(" + str(o_id) + "," + str(funds) + ",'" + event_name + "', 1, '" + event_type + "','" + event_date + "','" + venue + "'," + str(fee) + "," + str(max_par) + "," + str(max_teams) + ");"
-    print(query)
     c.execute(query)
     conn.commit()
     return jsonify({"done":"done"})
@@ -153,7 +151,6 @@ def fund_rem():
   c.execute(query)
   rows = c.fetchone()
   funds_given = rows[1]
-  print(funds_given)
   query = "SELECT * FROM funds WHERE e_id = " + str(e_id) + ";"
   c.execute(query)
   rows = c.fetchall()
@@ -177,7 +174,6 @@ def event_log():
   else:
     return jsonify({})
 
-
 @app.route('/totalprofit', methods=["POST"])
 def total_profit():
   o_id = request.get_json()["o_id"]
@@ -187,13 +183,15 @@ def total_profit():
   query = "SELECT * FROM event WHERE o_id = " + str(o_id) + ";"
   c.execute(query)
   rows = c.fetchall()
-  profit_made = 0
+  total_profit_made = []
+  rows.sort(key = lambda x : x[5])
+  print(rows)
+  objects = []
   for row in rows:
-    query = "SELECT * FROM registration WHERE e_id = " + str(row[3]) + ";"
-    c.execute(query)
-    rows1 = c.fetchall()
-    profit_made += len(rows1) * row[7] - row[1]
-  return jsonify({"profit": profit_made})
+    req = requests.post("http://127.0.0.1:5000/eventprofit", json = {"e_id":row[0]}).json()
+    profit = req["profit"]
+    objects.append({"label":row[2], "y":profit})
+  return jsonify(objects)
 
 @app.route('/eventprofit', methods=["POST"])
 def event_profit():
@@ -205,12 +203,13 @@ def event_profit():
   c.execute(query)
   rows = c.fetchall()
   cost_per_reg = rows[0][7]
-  amount_spent = rows[0][1]
   query = "SELECT * FROM registration WHERE e_id = " + str(e_id) + ";"
-  c.exectue(query)
+  c.execute(query)
   rows = c.fetchall()
-  total_from_reg = cost_per_reg * len(rows) - amount_spent
-  return jsonify({"profit": total_from_reg})
+  total_from_reg = cost_per_reg * len(rows)
+  req = requests.post("http://127.0.0.1:5000/fund_rem", json = {"e_id":e_id}).json()
+  total = total_from_reg + req["rem_funds"]
+  return jsonify({"profit": total})
 
 @app.route('/allocateprize', methods=["POST"])
 def give_prize():
@@ -225,7 +224,6 @@ def give_prize():
   rows = c.fetchall()
   if(len(rows) != 0):
     query = "UPDATE registration SET prize = '" + prize + "' WHERE r_id = " + str(r_id) + ";"
-    print(query)
     c.execute(query)
     conn.commit()
     return jsonify({"message":"successful"})
@@ -241,7 +239,6 @@ def event_complete():
   query = "SELECT * FROM registration WHERE e_id = " + str(e_id) + ";"
   c.execute(query)
   rows = c.fetchall()
-  print(rows)
   if(len(rows) != 0):
     for row in rows:
       if(row[3] == '-'):
@@ -259,7 +256,66 @@ def show_reg():
   query = "SELECT * FROM registration WHERE e_id = " + str(e_id) + ";"
   c.execute(query)
   rows = c.fetchall()
-  return jsonify({"data": rows})
+  d = []
+
+  r_id = []
+  s_id = []
+  person_registered = []
+  team_mate_names = []
+  prize = []
+  i = 0
+  if(rows):
+    for row in rows:
+      r_id.append(row[0])
+      s_id.append(row[2])
+      prize.append(row[3])
+      query = "SELECT * FROM students WHERE s_id=" + str(row[2]) + ";"
+      c.execute(query)
+      row_x = c.fetchone()
+      person_registered.append(row_x[1])
+      query = "SELECT * FROM rteam WHERE id=" + str(row[0]) +";"
+      c.execute(query)
+      rows1 = c.fetchone()
+      team_mate_names.append([])
+      if(rows1):
+        team_mate_id = eval(rows1[1])
+        for id in team_mate_id:
+          query = "SELECT * FROM students WHERE s_id=" + str(id) + ";"
+          c.execute(query)
+          row2 = c.fetchone()
+          team_mate_names[i].append(str(row2[1]))
+        i = i + 1
+  for x in range(len(s_id)):
+    d.append({"r_id": r_id[x], "s_id": s_id[x], "s_name": person_registered[x], "team_mates": team_mate_names[x], "prize": prize[x]})
+  print(d)
+  return jsonify({"data": d})
+
+@app.route('/no_of_reg', methods=['POST'])
+def showw_reg():
+  o_id = request.get_json()["o_id"]
+  database = r"pythonsqlite.db"
+  conn = create_connection(database)
+  c = conn.cursor()
+  query = "SELECT * FROM event WHERE o_id = " + str(o_id) + ";"
+  event_name = []
+  no_of_reg = []
+  c.execute(query)
+  rows = c.fetchall()
+  if(rows):
+    rows.sort(key = lambda x : x[5])
+    for row in rows:
+      event_name.append(row[2])
+      query = "SELECT * FROM registration WHERE e_id = " + str(row[0]) + ";"
+      c.execute(query)
+      rows = c.fetchall()
+      no_of_reg.append(len(rows))
+  objects = []
+  if(len(event_name) != 0):
+    for x in range(len(event_name)):
+      objects.append({"label": event_name[x], "y": no_of_reg[x]})
+  return jsonify(objects)
+
+
 
 
 database = r"pythonsqlite.db"
@@ -270,7 +326,7 @@ create_orgainsers_table = """CREATE TABLE IF NOT EXISTS organisers (o_id INTEGER
 create_hobbies_table = """CREATE TABLE IF NOT EXISTS hobbies (id INTEGER PRIMARY KEY AUTOINCREMENT, student_id INTEGER, hobby text, FOREIGN KEY (student_id) REFERENCES students(s_id)) """
 create_event_table = """ CREATE TABLE IF NOT EXISTS event( e_id INTEGER PRIMARY KEY AUTOINCREMENT, funds INTEGER NOT NULL, e_name VARCHAR(100) NOT NULL, o_id INTEGER NOT NULL, e_type VARCHAR(100) NOT NULL, e_date DATETIME NOT NULL, e_venue VARCHAR(300) NOT NULL, e_fee INTEGER, e_tsize INTEGER, e_maxpar INTEGER, FOREIGN KEY (o_id) REFERENCES organiser(id));"""
 create_registration_table = """CREATE TABLE IF NOT EXISTS registration (r_id INTEGER PRIMARY KEY AUTOINCREMENT,  e_id INTEGER NOT NULL, s_id INTEGER NOT NULL, prize VARCHAR(100) DEFAULT '-', FOREIGN KEY (s_id) REFERENCES student(s_id), FOREIGN KEY (e_id) REFERENCES event(e_id));"""
-create_registrationteam_table = """CREATE TABLE IF NOT EXISTS rteam (id INTEGER PRIMARY KEY AUTOINCREMENT, members VARCHAR(200) NOT NULL, FOREIGN KEY (id) REFERENCES registration(r_id));"""
+create_registrationteam_table = """CREATE TABLE IF NOT EXISTS rteam (id INTEGER PRIMARY KEY, members VARCHAR(200) NOT NULL, FOREIGN KEY (id) REFERENCES registration(r_id));"""
 create_funds_table = """CREATE TABLE IF NOT EXISTS funds (id INTEGER PRIMARY KEY AUTOINCREMENT, e_id INTEGER, amount INTEGER, reason TEXT, FOREIGN KEY (e_id) REFERENCES event(e_id));"""
 #create_updates_table = """CREATE TABLE IF NOT EXISTS updates (id INTEGER PRIMARY KEY AUTOINCREMENT, o_id INTEGER, r_id INTEGER, FOREIGN KEY (o_id) REFERENCES organisers(id) , FOREIGN KEY (r_id) REFERENCES registration(r_id));"""
 #create_create_event_table = """CREATE TABLE IF NOT EXISTS creates (id INTEGER PRIMARY KEY AUTOINCREMENT, o_id INTEGER, e_id INTEGER, FOREIGN KEY (o_id) REFERENCES organisers(o_id), FOREIGN KEY (e_id) REFERENCES event(e_id));"""

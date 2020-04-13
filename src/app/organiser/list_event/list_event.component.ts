@@ -119,7 +119,7 @@ export class AllEvents {
   see_registrations(event) {
     this.event = event;
     const dialogRef = this.dialog.open(DisplayRegistrationTable, {
-      width: '300px',
+      width: '600px',
       data: {event: this.event}
     })
     this.httpClient.post('http://127.0.0.1:5000/show_reg', {'e_id': this.event[0]}).subscribe(data => {

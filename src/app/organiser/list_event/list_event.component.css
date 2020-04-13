@@ -14,11 +14,15 @@ h1 {
 }
 
 #card1, #card2 {
-  width: 50%;
-  margin-left: 25%;
+  width: 60%;
+  margin-left: 20%;
 }
 
 .row {
-  align-content: center;
+  text-align: center;
 }
 
+button {
+  margin: 10px;
+  padding: 10px;
+}

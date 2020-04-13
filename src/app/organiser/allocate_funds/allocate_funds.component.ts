@@ -14,6 +14,7 @@ export class DialogOverviewExampleDialog {
   message:object;
   serverData: JSON;
   message1: string;
+  message2: string;
   constructor(private data1: OrganiserService, public dialogRef: MatDialogRef<DialogOverviewExampleDialog>, private httpClient: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -26,18 +27,28 @@ export class DialogOverviewExampleDialog {
     console.log(this.amount);
     console.log(this.reason);
     console.log(this.data);
-    this.httpClient.post('http://127.0.0.1:5000/allocatefunds', {'o_id': this.message['o_id'], 'e_id': this.data.event[0], "amount": this.amount, "reason": this.reason}).subscribe(data => {
-      this.serverData = data as JSON;
-      console.log(this.serverData);
-      this.message1 = this.serverData["message"]
-      console.log(this.message1);
-      if(this.message1 === "successful") {
-        this.closeDialog();
-      }
-      else {
-        this.message1 = "Insufficient funds"
-      }
-    });
+    if(this.amount && this.reason) {
+      this.httpClient.post('http://127.0.0.1:5000/allocatefunds', {'o_id': this.message['o_id'], 'e_id': this.data.event[0], "amount": this.amount, "reason": this.reason}).subscribe(data => {
+        this.serverData = data as JSON;
+        console.log(this.serverData);
+        this.message1 = this.serverData["message"]
+        console.log(this.message1);
+        if(this.message1 === "successful") {
+          this.closeDialog();
+        }
+        else {
+          this.message1 = "Insufficient funds!"
+        }
+      });
+    }
+    else{
+      this.message2 = "Enter all details!";
+    }
+  }
+
+  mess2() {
+    this.message2 = ""
+    this.message1 = ""
   }
 
   closeDialog() {
