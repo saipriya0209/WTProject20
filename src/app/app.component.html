@@ -7,17 +7,28 @@
       </ul>
       <ul class="right hide-on-med-and-down">
         <li>
-          <a *ngIf="!show() && !check()" routerLink='/login' class='nav-link'><i>Login</i></a>
+          <a *ngIf="!show() && !show1()" routerLink='/login' class='nav-link'><i>Login</i></a>
         </li>
         <li>
-          <a *ngIf="!show() && !check()" routerLink='/register' class='nav-link'><i>Register</i></a>
+          <a *ngIf="!show() && !show1()" routerLink='/register' class='nav-link'><i>Register</i></a>
         </li>
         <li>
-          <a *ngIf="show() && check()" routerLink='/profile' class='nav-link'><i>Profile</i></a>
+          <a *ngIf="show() && !show1()" routerLink='/profile' class='nav-link'><i>Profile</i></a>
+        </li>
+        <!--
+          Change links for students below, add your own routerLinks
+        -->
+        <li>
+          <a *ngIf="!show() && show1()" class='nav-link'><i>Dummy1</i></a>
         </li>
         <li>
-          <a *ngIf="show() && check()" routerLink='/' class='nav-link'><i (click)="setempty()">Logout</i></a>
+          <a *ngIf="!show() && show1()" class='nav-link'><i>Dummy2</i></a>
         </li>
+        <!-- Till here, after this logout should be present in both -->
+        <li>
+          <a *ngIf="show() || show1()" routerLink='/' class='nav-link'><i (click)="setempty()">Logout</i></a>
+        </li>
+        <li>
       </ul>
     </div>
 </nav>

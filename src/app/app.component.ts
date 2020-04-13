@@ -14,18 +14,21 @@ export class AppComponent {
   title = 'app';
   message: object;
   serverData: JSON;
-  m: string;
+  message1: object;
 
-  constructor(private httpClient: HttpClient, private organiser: OrganiserService) {
-    this.organiser.currentMessage.subscribe(message => {this.message = message; console.log(this.message); this.show(); this.check();});
+  constructor(private httpClient: HttpClient, private organiser: OrganiserService, private student: StudentService) {
+    this.organiser.currentMessage.subscribe(message => {this.message = message; console.log(this.message); });
+    this.student.currentMessage.subscribe(message1 => {this.message = message1; console.log(this.message); });
   }
 
   ngOnInit() {
+    this.message = {}
+    this.message1 = {}
   }
 
   show() {
     //console.log(this.student.currentMessage);
-    if(this.message.hasOwnProperty('first_name')) {
+    if('first_name' in this.message && 'o_id' in this.message) {
       return true;
     }
     else
@@ -38,13 +41,11 @@ export class AppComponent {
     this.show();
   }
 
-  check() {
-    if(Object.keys(this.message).length == 0) {
-      return false;
+  show1() {
+    if('first_name' in this.message && 's_id' in this.message) {
+      return true;
     }
     else
-      return true;
+      return false;
   }
-
-
 }
