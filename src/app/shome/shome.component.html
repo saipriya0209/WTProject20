@@ -1,0 +1,11 @@
+<h1>Welcome {{ name }}!</h1>
+<div class="flex2">
+<button class="waves-effect waves-light btn-large" (click)="get_events()"> See the events</button>
+<button class="waves-effect waves-light btn-large" (click)="add_hobby()"> Add Hobby</button>
+<button class="waves-effect waves-light btn-large" (click)="reg_event()"> Register for an Event</button>
+<button class="waves-effect waves-light btn-large" (click)="get_prizes()"> See your Prizes</button>
+<button class="waves-effect waves-light btn-large" (click)="get_team()"> Create a team! </button>
+</div>
+<div id="chartContainer1" style="height: 370px;float:left; width: 500px; margin-left: 100px;"></div>
+<div id="chartContainer2" style="height: 370px; float:left; width: 500px; margin-left: 100px;"></div>
+<router-outlet></router-outlet>

@@ -20,7 +20,8 @@ const routes: Routes = [
 export class RegisterComponent {
   infoForm: FormGroup;
   serverData: JSON;
-
+  show: number;
+  message: string;
   constructor(private httpClient: HttpClient, public router: Router) {
     this.infoForm = new FormGroup({
       first_name: new FormControl(''),
@@ -32,13 +33,22 @@ export class RegisterComponent {
   }
 
   newUser() {
-    var reqData = {'first_name': this.infoForm.value['first_name'], 'last_name': this.infoForm.value['last_name'], 'email': this.infoForm.value["email"], 'password': this.infoForm.value["password"], 'phone_no': this.infoForm.value['phone_no']};
-    if(reqData["first_name"].length != 0 && reqData["last_name"].length != 0 && reqData["email"].length != 0 && reqData["password"].length != 0 && reqData["phone_no"].length != 0) {
-      this.httpClient.post('http://127.0.0.1:5000/newuser', reqData ).subscribe(data => {
+      this.httpClient.post('http://127.0.0.1:5000/newuser', {'first_name': this.infoForm.value['first_name'], 'last_name': this.infoForm.value['last_name'], 'email': this.infoForm.value["email"], 'password': this.infoForm.value["password"], 'phone_no': this.infoForm.value['phone_no']} ).subscribe(data => {
       this.serverData = data as JSON;
       console.log(this.serverData);
-      this.router.navigate(['/profile']);
-      })
-    }
+      if(this.serverData["result"] == "successful") {
+        this.message = "Successful!"
+        this.show = 1;
+        //this.router.navigate(['/login']);
+      }
+      else {
+        this.message = "That email address already belongs to another account!"
+        this.show = 0;
+      }
+    });
+  }
+
+  messdis() {
+    this.message = "";
   }
 }

@@ -22,6 +22,7 @@ export class LoginComponent {
   credentialsForm: FormGroup;
   serverData: JSON;
   message: string;
+  messagedisp: string;
   constructor(private httpClient: HttpClient, private data: OrganiserService, private data1: StudentService, public router: Router) {
     this.credentialsForm = new FormGroup({
       email: new FormControl(''),
@@ -42,9 +43,16 @@ export class LoginComponent {
       }
       else if('first_name' in this.serverData && this.credentialsForm.value["type_account"] == "student" ) {
         this.data1.changeMessage(this.serverData);
-        //this.router.navigate(['/profile_student'])
+        this.router.navigate(['/studentprofile'])
+      }
+      else {
+        this.messagedisp = "Invalid credentials!"
       }
     })
+  }
+
+  destroy() {
+    this.messagedisp = "";
   }
 }
 

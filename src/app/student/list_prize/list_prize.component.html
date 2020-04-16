@@ -1,0 +1,25 @@
+<style>
+  table {
+    width: 70%;
+    margin-left: 15%;
+  }
+
+  h1, h2 {
+    text-align: center;
+  }
+</style>
+
+<h1>You're always a winner! </h1>
+<table mat-table [dataSource]="serverData" class="mat-elevation-z8">
+  <ng-container matColumnDef="event">
+    <th mat-header-cell *matHeaderCellDef> Event </th>
+    <td mat-cell *matCellDef="let element"> {{element[0]}} </td>
+  </ng-container>
+  <ng-container matColumnDef="prize">
+    <th mat-header-cell *matHeaderCellDef> Prize </th>
+    <td mat-cell *matCellDef="let element"> {{element[1]}} </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+

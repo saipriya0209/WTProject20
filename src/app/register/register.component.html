@@ -15,7 +15,7 @@
   <br>
   <mat-form-field appearance="null">
   <mat-label for="email">Email:</mat-label>
-  <input matInput formControlName="email" type="email" id="email" name="email" required><br>
+  <input matInput (change)="messdis()" formControlName="email" type="email" id="email" name="email" required><br>
   </mat-form-field>
   <br>
   <mat-form-field appearance="null">
@@ -28,6 +28,7 @@
   <input matInput formControlName="phone_no" type="number" id="phone_no" name="phone_no" required><br>
   </mat-form-field>
   <br>
+  <div *ngIf="message"> {{message}} <a routerLink='/login' *ngIf="show">Proceed to Login</a> </div>
   <button mat-button class="btn waves-effect waves-light" type="submit" ng-disable="infoForm.$invalid">Submit</button>
 </form>
 </div>

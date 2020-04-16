@@ -1,0 +1,12 @@
+.flex2 {
+  display: flex;
+  justify-content: space-around;
+}
+
+h1 {
+  text-align: center;
+}
+
+#chartContainer1, #chartContainer2 {
+  margin-top: 25px;
+}

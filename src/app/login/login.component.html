@@ -5,12 +5,12 @@
       <form [formGroup]="credentialsForm" (submit)="checkCred()">
         <mat-form-field appearance="null">
           <mat-label for="email">Email:</mat-label>
-          <input matInput formControlName="email" type="email" id="email" name="email" required><br>
+          <input (change)="destroy()" matInput formControlName="email" type="email" id="email" name="email" required><br>
         </mat-form-field>
         <br>
         <mat-form-field appearance="null">
           <mat-label for="password">Password:</mat-label>
-          <input matInput formControlName="password" type="password" id="password" name="password" required><br>
+          <input (change)="destroy()" matInput formControlName="password" type="password" id="password" name="password" required><br>
         </mat-form-field>
         <br>
           <mat-radio-group formControlName="type_account">
@@ -18,6 +18,7 @@
           <mat-radio-button value="student">Student</mat-radio-button>
           </mat-radio-group>
         <br>
+        <div *ngIf="messagedisp"> {{messagedisp}}</div>
           <button class="btn waves-effect waves-light" mat-button type="submit">Submit</button>
       </form>
   </div>

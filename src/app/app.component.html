@@ -19,7 +19,7 @@
           Change links for students below, add your own routerLinks
         -->
         <li>
-          <a *ngIf="!show() && show1()" class='nav-link'><i>Dummy1</i></a>
+          <a *ngIf="!show() && show1()" routerLink='/studentprofile' class='nav-link'><i>Profile</i></a>
         </li>
         <li>
           <a *ngIf="!show() && show1()" class='nav-link'><i>Dummy2</i></a>
@@ -33,4 +33,5 @@
     </div>
 </nav>
 <script type="text/javascript" src="js/materialize.min.js"></script>
+<div style="background-image: './more-leaves.jpg';"></div>
 <router-outlet></router-outlet>
