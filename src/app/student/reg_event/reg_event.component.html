@@ -1,11 +1,52 @@
+
+<style>
+  .row {
+    display: flex;
+    position: relative;
+    text-align: center;
+  }
+  
+  /* Create two equal columns that sits next to each other */
+  .column {
+    flex: 50%;
+    padding: 10px; /* Should be removed. Only for demonstration */
+    left: 30px;
+  }
+  
+  h3 {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    opacity: 0.8;
+    font-weight: lighter;
+    left: 10%;
+    width: 100px;
+  }
+  
+  #card1, #card2 {
+    position: relative;
+    background-color: black;
+    width: 80%;
+    border-radius: 20px;
+    opacity: 0.7;
+    left: -25%;
+  }
+  
+  button {
+    margin: 10px;
+    padding: 10px;
+  }
+  
+  
+  </style>
+
 <div class='row'>
   <div class='column'>
-    <h1>Upcoming Events</h1>
+    <h3>Upcoming Events</h3>
       <ul id="outerlist1">
         <li *ngFor="let event of this.serverData">
           <div class="row">
             <div class="col s12 m6">
-              <div class="card blue-grey darken-1" id="card1">
+              <div class="card" id="card1">
                 <div class="card-content white-text">
                   <span class="card-title">{{ event[2] }}</span><br>
                   <ul>Event type: {{ event[4] }} </ul>

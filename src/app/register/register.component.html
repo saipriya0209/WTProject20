@@ -1,13 +1,12 @@
 <div class="row">
   <div class="col-md-3 mt-5 mx-auto center">
-    <div class="jumbotron">
+    <div class="box">
 <h3 class="h3 mb-3 font-weight-normal">Register</h3>
 <form [formGroup]="infoForm" (submit)="newUser()">
   <mat-form-field appearance="null">
   <mat-label for="first_name">First Name:</mat-label>
   <input matInput formControlName="first_name" type="text" id="first_name" name="first_name" required>
   </mat-form-field>
-  <br>
   <mat-form-field appearance="null">
   <mat-label for="last_name">Last Name:</mat-label>
   <input matInput formControlName="last_name" type="text" id="last_name" name="last_name" required><br>
@@ -17,7 +16,6 @@
   <mat-label for="email">Email:</mat-label>
   <input matInput (change)="messdis()" formControlName="email" type="email" id="email" name="email" required><br>
   </mat-form-field>
-  <br>
   <mat-form-field appearance="null">
   <mat-label for="password">Password:</mat-label>
   <input matInput formControlName="password" type="password" id="password" name="password" required><br>
@@ -28,7 +26,7 @@
   <input matInput formControlName="phone_no" type="number" id="phone_no" name="phone_no" required><br>
   </mat-form-field>
   <br>
-  <div *ngIf="message"> {{message}} <a routerLink='/login' *ngIf="show">Proceed to Login</a> </div>
+  <div class="new" *ngIf="message"> {{message}} <a routerLink='/login' *ngIf="show">Proceed to Login</a> </div>
   <button mat-button class="btn waves-effect waves-light" type="submit" ng-disable="infoForm.$invalid">Submit</button>
 </form>
 </div>

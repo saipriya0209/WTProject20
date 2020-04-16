@@ -1,32 +1,32 @@
-<nav class = "nav-wrapper teal lighten-2">
+<nav class = "nav-wrapper teal lighter-2">
     <div class="nav-wrapper">
       <ul id="nav-mobile" class="left hide-on-med-and-down">
         <li>
-          <a routerLink='/' class='nav-link'><i>Home</i></a>
+          <a routerLink='/' class='nav-link'>Home</a>
         </li>
       </ul>
       <ul class="right hide-on-med-and-down">
         <li>
-          <a *ngIf="!show() && !show1()" routerLink='/login' class='nav-link'><i>Login</i></a>
+          <a *ngIf="!show() && !show1()" routerLink='/login' class='nav-link'>Login</a>
         </li>
         <li>
-          <a *ngIf="!show() && !show1()" routerLink='/register' class='nav-link'><i>Register</i></a>
+          <a *ngIf="!show() && !show1()" routerLink='/register' class='nav-link'>Register</a>
         </li>
         <li>
-          <a *ngIf="show() && !show1()" routerLink='/profile' class='nav-link'><i>Profile</i></a>
+          <a *ngIf="show() && !show1()" routerLink='/profile' class='nav-link'>Profile</a>
         </li>
         <!--
           Change links for students below, add your own routerLinks
         -->
         <li>
-          <a *ngIf="!show() && show1()" routerLink='/studentprofile' class='nav-link'><i>Profile</i></a>
+          <a *ngIf="!show() && show1()" routerLink='/studentprofile' class='nav-link'>Profile</a>
         </li>
         <li>
-          <a *ngIf="!show() && show1()" class='nav-link'><i>Dummy2</i></a>
+          <a *ngIf="!show() && show1()" class='nav-link'>Dummy2</a>
         </li>
         <!-- Till here, after this logout should be present in both -->
         <li>
-          <a *ngIf="show() || show1()" routerLink='/' class='nav-link'><i (click)="setempty()">Logout</i></a>
+          <a *ngIf="show() || show1()" routerLink='/' class='nav-link'><span (click)="setempty()">Logout</span></a>
         </li>
         <li>
       </ul>
