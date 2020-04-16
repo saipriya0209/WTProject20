@@ -1,15 +1,97 @@
 <style>
   table {
-    width: 70%;
-    margin-left: 15%;
+    width: 500px;
+    margin-left: 5%;
   }
+  .row {
+  display: flex;
+}
 
+/* Create two equal columns that sits next to each other */
+.column {
+  flex: 50%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+
+
+#card1, #card2 {
+  width: 60%;
+  margin-left: 20%;
+}
+
+.row {
+  text-align: center;
+}
+
+button {
+  margin: 10px;
+  padding: 10px;
+}
   h1, h2 {
     text-align: center;
   }
 </style>
+<div class='row'>
+  <div class='column'>
+    <h3> Prizes you've won </h3>
+    <ul id="outerlist1">
+        <div class="row">
+          <div class="col s12 m6">
 
+
+                  <table mat-table [dataSource]="serverData" class="mat-elevation-z8">
+                        <ng-container matColumnDef="event">
+                        <th mat-header-cell *matHeaderCellDef> Event </th>
+                        <td mat-cell *matCellDef="let element"> {{element[0]}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="prize">
+                        <th mat-header-cell *matHeaderCellDef> Prize </th>
+                         <td mat-cell *matCellDef="let element"> {{element[1]}} </td>
+                         </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+            <!--<div class="card blue-grey darken-1" id="card1">
+              <div class="card-content white-text">
+                <span class="card-title">{{ event[2] }}</span><br>
+                <ul>Event Id: {{ event[0] }}</ul>
+                <ul>Date: {{ event[5] }}</ul>
+                <ul>Venue: {{ event[6] }}</ul>
+                <ul>Participants per team: {{ event[8] }} </ul>
+              </div>
+            </div>-->
+          </div>
+        </div>
+
+    </ul>
+  </div>
+  <div class='column'>
+    <h3>Account Details</h3>
+    <ul id="outerlist1">
+      <li *ngFor="let event of this.info">
+        <div class="row">
+          <div class="col s12 m6">
+            <div class="card blue-grey darken-1" id="card2">
+              <div class="card-content white-text">
+                <span class="card-title">{{event[1]}} {{event[2]}} </span><br>
+                <ul> Student ID : {{ event[0] }}</ul>
+                 <ul> Email ID: {{ event[3] }}</ul>
+                <ul>Phone number: {{ event[5] }} </ul>
+                <ul>Stream {{ event[6] }} </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+<!--
 <h1>You're always a winner! </h1>
+
 <table mat-table [dataSource]="serverData" class="mat-elevation-z8">
   <ng-container matColumnDef="event">
     <th mat-header-cell *matHeaderCellDef> Event </th>
@@ -22,4 +104,4 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-
+-->
