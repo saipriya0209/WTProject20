@@ -11,7 +11,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
 import {MatButtonModule} from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {NgMatSearchBarModule} from 'ng-mat-search-bar';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -36,7 +38,9 @@ import { EventDet } from './student/event_details/event_details.component';
 import { DispOrg } from './student/display_org/display_org.component';
 import { TeamInput } from './student/team_input/team_input.component';
 import { AfterReg } from './student/after_reg/after_reg.component';
-
+import { AddHobby } from './student/add_hobby/add_hobby.component';
+import { DispHobby } from './student/disp_hobby/disp_hobby.component';
+import {FilterPipe} from './filter.pipe';
 
 
 const routes: Routes = [
@@ -56,6 +60,9 @@ const routes: Routes = [
   {path:'teaminp',component: TeamInput},
   {path:'afterreg',component: AfterReg},
   {path: 'eventdet', component: EventDet},
+  {path: 'disphobby', component: DispHobby},
+  {path: 'addhobby', component: AddHobby},
+
 ]
 
 @NgModule({
@@ -79,7 +86,10 @@ const routes: Routes = [
     EventDet,
     DispOrg,
     AfterReg,
-    TeamInput
+    TeamInput,
+    DispHobby,
+    AddHobby,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -96,7 +106,10 @@ const routes: Routes = [
     MatInputModule,
     MatFormFieldModule,
     MatRadioModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCheckboxModule,
+    MatAutocompleteModule,
+    NgMatSearchBarModule
   ],
   providers: [StudentService, OrganiserService],
   bootstrap: [AppComponent]

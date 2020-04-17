@@ -1,4 +1,4 @@
-<nav class = "nav-wrapper teal lighter-2">
+<nav class = "nav-wrapper teal lighten-2">
     <div class="nav-wrapper">
       <ul id="nav-mobile" class="left hide-on-med-and-down">
         <li>
@@ -12,18 +12,49 @@
         <li>
           <a *ngIf="!show() && !show1()" routerLink='/register' class='nav-link'>Register</a>
         </li>
-        <li>
+        <!-- <li>
           <a *ngIf="show() && !show1()" routerLink='/profile' class='nav-link'>Profile</a>
-        </li>
+        </li> -->
         <!--
           Change links for students below, add your own routerLinks
         -->
+        <!-- <li>
+          <a *ngIf="!show() && show1()" routerLink='/studentprofile' class='nav-link'>Profile</a>
+        </li> -->
+        <li>
+          <a *ngIf="show() || show1()" class='nav-link'>
+
+           <!--- <i>Dummy2</i>-->
+           <mat-search-bar style="padding: 10px; margin-top: 20px;" [(ngModel)]="searchText"
+              [matAutocomplete]="simpleAuto"
+            ></mat-search-bar>
+
+             <mat-autocomplete #simpleAuto="matAutocomplete">
+              <mat-option *ngFor="let option of this.serverData2 | filter: searchText" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+
+
+          </a>
+        </li>
+
+        <li>
+          <a *ngIf="show() || show1()" class='nav-link'>
+
+             <span style="padding: 0 10px 0 0;" (click) = "searchevent()">Find Event</span>
+
+
+          </a>
+        </li>
+        <li>
+          <a *ngIf="show() && !show1()" routerLink='/profile' class='nav-link'>Profile</a>
+        </li>
         <li>
           <a *ngIf="!show() && show1()" routerLink='/studentprofile' class='nav-link'>Profile</a>
         </li>
-        <li>
-          <a *ngIf="!show() && show1()" class='nav-link'>Dummy2</a>
-        </li>
+
+
         <!-- Till here, after this logout should be present in both -->
         <li>
           <a *ngIf="show() || show1()" routerLink='/' class='nav-link'><span (click)="setempty()">Logout</span></a>

@@ -2,16 +2,29 @@
   button {
     margin: 15px;
   }
+  .box{
+  align-content: center;
+  border-radius: 20px;
+  width: 400px;
+  height: auto;
+  background-color: snow;
+  padding: 10px;
+  opacity: 1;
+  top: 150px;
+  left: 400px;
+  position: fixed;
+
+}
 </style>
-      <div *ngFor="let event of this.eventData" >
-          <h1 class="style1">{{ event[2] }}</h1>
-          <div>Event Type: <b>{{ event[4] }}</b></div>
+      <div class="box" *ngFor="let event of this.eventData" >
+          <h1 class="style1" style="text-align: center;">{{ event[2] }}</h1>
+          <div>Event Type: <b>{{ event[4] }}</b></div> 
           <div>Date:  <b> {{ event[5] }}</b></div>
           <div>Venue: <b> {{ event[6] }}</b></div>
           <div>Registration Fee: <b> Rs. {{ event[7] }}</b>
           <div>Team Size: <b> {{ event[8] }}</b></div>
           <button type='submit' class="btn waves-effect waves-light" (click)="showorg()"> Contact Organiser </button> &nbsp; &nbsp; &nbsp;
-          <button type='submit' class="btn waves-effect waves-light" (click)="teaminp()"> Team Details </button> &nbsp; &nbsp; &nbsp;
+          <button type='submit' class="btn waves-effect waves-light" (click)="teaminp()"> Team Details </button> &nbsp; &nbsp; &nbsp;<br>
           <button type='submit' class="btn waves-effect waves-light" (click)="regevent()"> Proceed</button> &nbsp; &nbsp; &nbsp;
           <button type='submit' class="btn waves-effect waves-light" (click)="goback()"> Back </button>
         </div>

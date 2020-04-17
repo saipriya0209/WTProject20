@@ -33,22 +33,32 @@ export class RegisterComponent {
   }
 
   newUser() {
-      this.httpClient.post('http://127.0.0.1:5000/newuser', {'first_name': this.infoForm.value['first_name'], 'last_name': this.infoForm.value['last_name'], 'email': this.infoForm.value["email"], 'password': this.infoForm.value["password"], 'phone_no': this.infoForm.value['phone_no']} ).subscribe(data => {
-      this.serverData = data as JSON;
-      console.log(this.serverData);
-      if(this.serverData["result"] == "successful") {
-        this.message = "Successful!"
-        this.show = 1;
-        //this.router.navigate(['/login']);
-      }
-      else {
-        this.message = "That email address already belongs to another account!"
-        this.show = 0;
-      }
-    });
+    if(this.infoForm.value['first_name'] && this.infoForm.value['last_name'] && this.infoForm.value['password'] && this.infoForm.value['email'] && this.infoForm.value['phone_no'] ) {
+        this.httpClient.post('http://127.0.0.1:5000/newuser', {'first_name': this.infoForm.value['first_name'], 'last_name': this.infoForm.value['last_name'], 'email': this.infoForm.value["email"], 'password': this.infoForm.value["password"], 'phone_no': this.infoForm.value['phone_no']} ).subscribe(data => {
+
+        this.serverData = data as JSON;
+        console.log(this.serverData);
+        if(this.serverData["result"] == "successful") {
+          this.message = "Successful!"
+          this.show = 1;
+          //this.router.navigate(['/login']);
+        }
+        else {
+          this.message = "That email address already belongs to another account!"
+          this.show = 0;
+        }
+      });
+    }
+    else {
+      this.message = "Enter all the details!"
+      this.show = 0;
+    }
   }
 
   messdis() {
-    this.message = "";
+    if(this.message == "That email address already belongs to another account!") {
+      this.message = "";
+      this.show = 0;
+    }
   }
 }

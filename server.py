@@ -27,9 +27,69 @@ def create_table(conn, create_table_sql):
   except Error as e:
       print(e)
 
+@app.route('/student/searchevents',methods=["POST"])
+def getEid():
+  name = request.get_json()["name"]
+  print(name)
+  database = r"pythonsqlite.db"
+  conn = create_connection(database)
+  c = conn.cursor()
+  q = "SELECT e_id,o_id FROM event WHERE e_name = '" + str(name) + "';"
+  print(q)
+  c.execute(q)
+  res = c.fetchall()
+  res = list(res)
+  print(res)
+  return jsonify(res)
+
+@app.route("/student/fetchhobbies", methods=["POST"])
+def ghob():
+  s_id=request.get_json()['student_id']
+  database = r"pythonsqlite.db"
+  conn = create_connection(database)
+  q="select hobby from hobbies where s_id=" + str(s_id) + ";"
+  cur = conn.cursor()
+  res=cur.execute(q)
+  res=list(res)
+  print (res)
+  final=set()
+  for row in res:
+    final.add(row[0])
+  final=list(final)
+
+  return jsonify(final),200
+
+@app.route('/student/hobby',methods=["POST"])
+def hobby():
+  s_id = request.get_json()["s_id"]
+  print(s_id)
+  interests = request.get_json()["hobby"]
+  database = r"pythonsqlite.db"
+  conn = create_connection(database)
+  c = conn.cursor()
+  query="select hobby from hobbies where s_id=" + str(s_id) + ";"
+  res=c.execute(query)
+  res=list(res)
+  prev=[]
+  for row in res:
+    prev.append(row[0])
+  tobeadded=[]
+  for ele in interests:
+    if str(ele) not in prev:
+      tobeadded.append(str(ele))
+
+  for ele in tobeadded:
+    q = "INSERT INTO hobbies(s_id,hobby) VALUES (" + str(s_id) + ", '" + str(ele) + "');"
+    print(q)
+    c.execute(q)
+    conn.commit()
+  return jsonify({'message':'Added'})
+
+
 @app.route("/")
 def hello():
     return jsonify({'text':'Hello World!'})
+
 
 @app.route("/checkuser", methods=["POST"])
 def check():
@@ -367,7 +427,7 @@ def checkreg():
 
     #checking if already registered
     team.append(sid)
-    q="select r_id, student_id from registration where e_id=" + str(eid) + ";"
+    q="select r_id, s_id from registration where e_id=" + str(eid) + ";"
     res=cur.execute(q)
     res=list(res)
     if (len(res)==0):
@@ -666,6 +726,22 @@ def all_event():
 
     print(res)
     return jsonify(res),200
+@app.route("/student/getevents",methods=["GET"])
+def s_event():
+    database = r"pythonsqlite.db"
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    #req=request.get_json()
+    q="SELECT e_name from event;"
+    cur.execute(q)
+    res=cur.fetchall()
+    res = list(res)
+    fa = []
+    for i in range(len(res)):
+      fa.append(res[i][0])
+    print(fa)
+    return jsonify(fa),200
+
 
 @app.route("/student/prizes",methods=["POST"])
 def display_prizes():
@@ -744,14 +820,14 @@ def reg_event():
 
 
 
-    query1="INSERT INTO registration(e_id,student_id,prize) VALUES(" +str( event_id ) + "," +"'" +str(stud_id) +"'"+ ", '-' );"
+    query1="INSERT INTO registration(e_id,s_id,prize) VALUES(" +str( event_id ) + "," +"'" +str(stud_id) +"'"+ ", '-' );"
     cur.execute(query1)
 
     q="select last_insert_rowid();"
     r_id=list(cur.execute(q))[0][0]
     #print(r_id)
 
-    query3="INSERT INTO rteam(r_id,members) VALUES("+ str(r_id) + "," + "'" + team_members + "'" + ");"
+    query3="INSERT INTO rteam(id,members) VALUES("+ str(r_id) + "," + "'" + team_members + "'" + ");"
     cur.execute(query3)
 
     con.commit()
@@ -813,8 +889,11 @@ database = r"pythonsqlite.db"
 create_students_table = """CREATE TABLE IF NOT EXISTS students (
     s_id INTEGER PRIMARY KEY AUTOINCREMENT, first_name text NOT NULL, last_name text NOT NULL, email text NOT NULL UNIQUE, password text NOT NULL, phone_no int(10) NOT NULL, stream text); """
 create_orgainsers_table = """CREATE TABLE IF NOT EXISTS organisers (o_id INTEGER PRIMARY KEY AUTOINCREMENT, first_name text NOT NULL, last_name text NOT NULL, email text NOT NULL UNIQUE, password text NOT NULL, phone_no int(10) NOT NULL); """
-create_hobbies_table = """CREATE TABLE IF NOT EXISTS hobbies (s_id INTEGER PRIMARY KEY, hobby text, FOREIGN KEY (s_id) REFERENCES students(s_id)) """
-create_event_table = """ CREATE TABLE IF NOT EXISTS event( e_id INTEGER PRIMARY KEY AUTOINCREMENT, funds INTEGER NOT NULL, e_name VARCHAR(100) NOT NULL, o_id INTEGER NOT NULL, e_type VARCHAR(100) NOT NULL, e_date DATETIME NOT NULL, e_venue VARCHAR(300) NOT NULL, e_fee INTEGER, e_tsize INTEGER, e_maxpar INTEGER, FOREIGN KEY (o_id) REFERENCES organiser(id));"""
+
+
+create_hobbies_table = """CREATE TABLE IF NOT EXISTS hobbies (id INTEGER PRIMARY KEY AUTOINCREMENT, s_id INTEGER, hobby text, FOREIGN KEY (s_id) REFERENCES students(s_id)) """
+#create_hobbies_table = """CREATE TABLE IF NOT EXISTS hobbies (s_id INTEGER, hobby text, FOREIGN KEY (s_id) REFERENCES students(s_id)) """
+create_event_table = """ CREATE TABLE IF NOT EXISTS event( e_id INTEGER PRIMARY KEY AUTOINCREMENT, funds INTEGER NOT NULL, e_name VARCHAR(100) NOT NULL, o_id INTEGER NOT NULL, e_type VARCHAR(100) NOT NULL, e_date DATETIME NOT NULL, e_venue VARCHAR(300) NOT NULL, e_fee INTEGER, e_tsize INTEGER, e_maxpar INTEGER, FOREIGN KEY (o_id) REFERENCES organiser(o_id));"""
 create_registration_table = """CREATE TABLE IF NOT EXISTS registration (r_id INTEGER PRIMARY KEY AUTOINCREMENT,  e_id INTEGER NOT NULL, s_id INTEGER NOT NULL, prize VARCHAR(100) DEFAULT '-', FOREIGN KEY (s_id) REFERENCES student(s_id), FOREIGN KEY (e_id) REFERENCES event(e_id));"""
 create_registrationteam_table = """CREATE TABLE IF NOT EXISTS rteam (id INTEGER PRIMARY KEY, members VARCHAR(200) NOT NULL, FOREIGN KEY (id) REFERENCES registration(r_id));"""
 create_funds_table = """CREATE TABLE IF NOT EXISTS funds (id INTEGER PRIMARY KEY AUTOINCREMENT, e_id INTEGER, amount INTEGER, reason TEXT, FOREIGN KEY (e_id) REFERENCES event(e_id));"""

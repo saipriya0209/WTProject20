@@ -18,6 +18,7 @@ import { EventDet } from './student/event_details/event_details.component';
 import { DispOrg } from './student/display_org/display_org.component';
 import { TeamInput } from './student/team_input/team_input.component';
 import { AfterReg } from './student/after_reg/after_reg.component';
+import {AddHobby} from './student/add_hobby/add_hobby.component';
 
 const appRoutes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -36,6 +37,8 @@ const appRoutes: Routes = [
   {path:'teaminp',component: TeamInput},
   {path:'afterreg',component: AfterReg},
   {path: 'eventdet', component: EventDet},
+  {path: 'addhobby', component: AddHobby},
+
 ]
 
 @NgModule({
